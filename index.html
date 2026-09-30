@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="bg-overlay"></div>
@@ -18,16 +20,34 @@
                 <h1 class="tibia-title">Tibia Hunt Analyzer</h1>
                 <p class="subtitle">Análise de loot, experiência e desempenho de caçada</p>
             </div>
-            <div class="status-badge">
-                <span class="status-dot"></span> Pronto para o combate
+            
+            <div class="header-right">
+                <!-- Autenticação Google -->
+                <div id="auth-container">
+                    <div id="g_id_onload"
+                        data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                        data-callback="handleCredentialResponse"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin" data-type="standard" data-theme="dark" data-size="medium"></div>
+                    <div id="user-profile" class="user-profile" style="display: none;">
+                        <img id="user-avatar" src="" alt="Avatar" class="user-avatar">
+                        <span id="user-name"></span>
+                        <button onclick="handleLogout()" class="btn-secondary">Sair</button>
+                    </div>
+                </div>
+
+                <div class="status-badge">
+                    <span class="status-dot"></span> Pronto para o combate
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- Area de Upload Estilo Medieval -->
+        <!-- Área de Upload com Drag & Drop e Botão de Limpar -->
         <section class="upload-section">
-            <label for="file-input" class="drop-zone">
+            <div class="drop-zone" id="drop-zone">
                 <div class="drop-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
@@ -36,7 +56,10 @@
                     <span class="drop-secondary">ou clique para abrir o grimório de arquivos</span>
                 </div>
                 <input type="file" id="file-input" multiple accept=".txt">
-            </label>
+            </div>
+            <div class="actions-bar">
+                <button id="clear-btn" class="btn-danger" onclick="clearAllData()">Limpar Dados da Hunt</button>
+            </div>
         </section>
 
         <!-- Cards de Visão Geral -->
@@ -64,6 +87,25 @@
             <div class="card">
                 <span class="card-title">Total de Abates</span>
                 <p class="metric" id="total-monsters">0</p>
+            </div>
+        </section>
+
+        <!-- Calculadora de Divisão de Party Share -->
+        <section class="section card-panel">
+            <div class="panel-header">
+                <h2>Calculadora de Divisão de Loot (Party Share)</h2>
+                <span class="panel-tag">Calculadora</span>
+            </div>
+            <div class="panel-body">
+                <div class="party-calculator-grid">
+                    <div class="form-group">
+                        <label for="party-members">Número de Jogadores:</label>
+                        <input type="number" id="party-members" min="1" max="10" value="4" onchange="calculatePartyShare()">
+                    </div>
+                    <div id="party-results" class="party-results-box">
+                        <p class="empty-msg">Carregue logs de caça para calcular a divisão do saldo do grupo.</p>
+                    </div>
+                </div>
             </div>
         </section>
 

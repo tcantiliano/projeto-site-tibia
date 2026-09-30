@@ -1,5 +1,105 @@
 let sessionsData = [];
 
+// Inicialização da aplicação e carregamento do LocalStorage
+document.addEventListener('DOMContentLoaded', () => {
+    loadSavedSessions();
+    checkSavedUser();
+    setupDragAndDrop();
+});
+
+// Parse JWT do Google Sign-In
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+}
+
+function handleCredentialResponse(response) {
+    const data = parseJwt(response.credential);
+    localStorage.setItem('tibia_user', JSON.stringify(data));
+    showUserProfile(data);
+}
+
+function showUserProfile(user) {
+    const signinBtn = document.querySelector('.g_id_signin');
+    const userProfile = document.getElementById('user-profile');
+    
+    if (signinBtn) signinBtn.style.display = 'none';
+    if (userProfile) {
+        userProfile.style.display = 'flex';
+        document.getElementById('user-avatar').src = user.picture;
+        document.getElementById('user-name').innerText = user.given_name || user.name;
+    }
+}
+
+function checkSavedUser() {
+    const savedUser = localStorage.getItem('tibia_user');
+    if (savedUser) {
+        showUserProfile(JSON.parse(savedUser));
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('tibia_user');
+    location.reload();
+}
+
+// Configuração Nativa de Drag and Drop
+function setupDragAndDrop() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const files = Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.txt'));
+        if (files.length > 0) {
+            processFiles(files);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            processFiles(files);
+        }
+    });
+}
+
+function processFiles(files) {
+    let filesRead = 0;
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const parsed = parseLogFile(file.name, e.target.result);
+            sessionsData.push(parsed);
+            filesRead++;
+
+            if (filesRead === files.length) {
+                saveSessions();
+                updateUI();
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
 function parseLogFile(fileName, content) {
     const lines = content.split('\n');
     const session = {
@@ -75,6 +175,38 @@ function parseDurationMinutes(durationStr) {
     return 0;
 }
 
+function saveSessions() {
+    localStorage.setItem('tibia_sessions', JSON.stringify(sessionsData));
+}
+
+function loadSavedSessions() {
+    const saved = localStorage.getItem('tibia_sessions');
+    if (saved) {
+        try {
+            sessionsData = JSON.parse(saved);
+            updateUI();
+        } catch (e) {
+            console.error('Erro ao ler sessões do LocalStorage', e);
+        }
+    }
+}
+
+function clearAllData() {
+    sessionsData = [];
+    localStorage.removeItem('tibia_sessions');
+    document.getElementById('file-input').value = '';
+    updateUI();
+}
+
+function updateUI() {
+    updateOverview();
+    populateComparisonTable();
+    populateMonstersTable();
+    populateLootTable();
+    setupTabs();
+    calculatePartyShare();
+}
+
 function updateOverview() {
     document.getElementById('total-sessions').innerText = sessionsData.length;
 
@@ -100,6 +232,31 @@ function updateOverview() {
     document.getElementById('total-supplies').innerText = formatGP(totalSupplies);
     document.getElementById('total-balance').innerText = formatGP(totalBalance);
     document.getElementById('total-monsters').innerText = totalMonsters.toLocaleString('pt-BR');
+}
+
+function calculatePartyShare() {
+    const resultsBox = document.getElementById('party-results');
+    const memberCount = parseInt(document.getElementById('party-members').value, 10) || 1;
+
+    if (sessionsData.length === 0) {
+        resultsBox.innerHTML = '<p class="empty-msg">Carregue logs de caça para calcular a divisão do saldo do grupo.</p>';
+        return;
+    }
+
+    let totalBalance = 0;
+    sessionsData.forEach(s => totalBalance += s.balance);
+
+    const sharePerMember = Math.floor(totalBalance / memberCount);
+
+    resultsBox.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div><strong>Balance Total do Grupo:</strong> <span class="highlight-green">${formatGP(totalBalance)}</span></div>
+            <div><strong>Lucro/Prejuízo Individual (${memberCount} membros):</strong> <span class="${sharePerMember >= 0 ? 'highlight-green' : 'highlight-orange'}">${formatGP(sharePerMember)}</span></div>
+            <p style="font-size: 0.8rem; color: var(--tibia-text-muted); margin-top: 4px;">
+                * Valor sugerido para que o líder pague cada integrante da party após cobrir os supplies.
+            </p>
+        </div>
+    `;
 }
 
 function populateComparisonTable() {
@@ -237,29 +394,3 @@ function renderSessionDetail(session) {
         </div>
     `;
 }
-
-document.getElementById('file-input').addEventListener('change', (event) => {
-    const files = Array.from(event.target.files);
-    if (files.length === 0) return;
-
-    sessionsData = [];
-    let filesRead = 0;
-
-    files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const parsed = parseLogFile(file.name, e.target.result);
-            sessionsData.push(parsed);
-            filesRead++;
-
-            if (filesRead === files.length) {
-                updateOverview();
-                populateComparisonTable();
-                populateMonstersTable();
-                populateLootTable();
-                setupTabs();
-            }
-        };
-        reader.readAsText(file);
-    });
-});

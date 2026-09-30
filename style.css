@@ -8,7 +8,7 @@
     --tibia-text: #e2e8f0;
     --tibia-text-muted: #94a3b8;
     
-    /* Novas cores personalizadas */
+    /* Cores personalizadas */
     --color-loot: #3b82f6;      /* Azul */
     --color-supplies: #f97316;  /* Laranja */
     --color-balance: #10b981;   /* Verde */
@@ -62,6 +62,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .tibia-title {
@@ -76,6 +84,36 @@ body {
     color: var(--tibia-text-muted);
     font-size: 0.875rem;
     margin-top: 2px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--tibia-panel-sub);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--tibia-border);
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--tibia-text);
+    border: 1px solid var(--tibia-border);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .status-badge {
@@ -116,9 +154,9 @@ body {
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
 }
 
-.drop-zone:hover {
+.drop-zone:hover, .drop-zone.dragover {
     border-color: var(--tibia-gold);
-    background-color: rgba(27, 36, 54, 0.9);
+    background-color: rgba(27, 36, 54, 0.95);
 }
 
 .drop-icon {
@@ -149,7 +187,27 @@ body {
     display: none;
 }
 
-/* Cards Grid com Destaques de Cores */
+.actions-bar {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -180,7 +238,6 @@ body {
     font-family: 'Cinzel', serif;
 }
 
-/* Utilitários de Cores Pedidas */
 .highlight-blue {
     color: var(--color-loot) !important;
 }
@@ -234,6 +291,34 @@ body {
     padding: 20px;
 }
 
+.party-calculator-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.form-group input {
+    background-color: var(--tibia-panel-sub);
+    border: 1px solid var(--tibia-border);
+    color: var(--tibia-text);
+    padding: 6px 12px;
+    border-radius: 4px;
+    width: 80px;
+}
+
+.party-results-box {
+    background-color: rgba(15, 20, 30, 0.6);
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--tibia-border);
+}
+
 .grid-2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -278,7 +363,7 @@ body {
 .empty-msg {
     text-align: center;
     color: var(--tibia-text-muted);
-    padding: 32px;
+    padding: 16px;
 }
 
 .session-tabs {
