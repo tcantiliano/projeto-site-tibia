@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tibia Hunt Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bg-overlay"></div>
+
+    <header class="header">
+        <div class="container header-container">
+            <div>
+                <h1 class="tibia-title">Tibia Hunt Analyzer</h1>
+                <p class="subtitle">Análise de loot, experiência e desempenho de caçada</p>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span> Pronto para o combate
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Area de Upload Estilo Medieval -->
+        <section class="upload-section">
+            <label for="file-input" class="drop-zone">
+                <div class="drop-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <div>
+                    <span class="drop-primary">Arraste seus arquivos de log (.txt) aqui</span>
+                    <span class="drop-secondary">ou clique para abrir o grimório de arquivos</span>
+                </div>
+                <input type="file" id="file-input" multiple accept=".txt">
+            </label>
+        </section>
+
+        <!-- Cards de Visão Geral -->
+        <section class="card-grid">
+            <div class="card">
+                <span class="card-title">Sessões de Caça</span>
+                <p class="metric" id="total-sessions">0</p>
+            </div>
+            <div class="card">
+                <span class="card-title">Tempo Total</span>
+                <p class="metric" id="total-time">00:00h</p>
+            </div>
+            <div class="card">
+                <span class="card-title">Total Loot</span>
+                <p class="metric highlight-blue" id="total-loot">0 GP</p>
+            </div>
+            <div class="card">
+                <span class="card-title">Total Supplies</span>
+                <p class="metric highlight-orange" id="total-supplies">0 GP</p>
+            </div>
+            <div class="card">
+                <span class="card-title">Balance Acumulado</span>
+                <p class="metric highlight-green" id="total-balance">0 GP</p>
+            </div>
+            <div class="card">
+                <span class="card-title">Total de Abates</span>
+                <p class="metric" id="total-monsters">0</p>
+            </div>
+        </section>
+
+        <!-- Tabela Comparativa -->
+        <section class="section card-panel">
+            <div class="panel-header">
+                <h2>Relatório de Caçadas</h2>
+                <span class="panel-tag">Server Log</span>
+            </div>
+            <div class="table-container">
+                <table id="comparison-table" class="tibia-table">
+                    <thead>
+                        <tr>
+                            <th>Hunt / Local</th>
+                            <th>Duração</th>
+                            <th>XP Gain</th>
+                            <th>XP/h</th>
+                            <th>Loot</th>
+                            <th>Supplies</th>
+                            <th>Balance</th>
+                            <th>Dmg/h</th>
+                            <th>Heal/h</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="9" class="empty-msg">Nenhum log importado. Inicie a caçada carregando um arquivo.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Grid Criaturas e Loot -->
+        <section class="section grid-2">
+            <div class="card-panel">
+                <div class="panel-header">
+                    <h2>Criaturas Derrotadas</h2>
+                </div>
+                <div class="table-container">
+                    <table id="monsters-table" class="tibia-table">
+                        <thead>
+                            <tr>
+                                <th>Criatura</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="empty-msg">Nenhum monstro registrado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="panel-header">
+                    <h2>Tesouros Coletados (Loot)</h2>
+                </div>
+                <div class="table-container">
+                    <table id="loot-table" class="tibia-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="empty-msg">Nenhum item coletado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detalhamento Individual -->
+        <section class="section card-panel">
+            <div class="panel-header">
+                <h2>Inspecionar Hunt Individual</h2>
+            </div>
+            <div class="panel-body">
+                <div class="session-tabs" id="session-tabs"></div>
+                <div class="session-content" id="session-detail-content">
+                    <p class="empty-msg">Carregue arquivos de log para visualizar os detalhes da sua hunt.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Tibia Hunt Analyzer &bull; Inspirado nas lendas de Tibia[cite: 4]</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

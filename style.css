@@ -1,0 +1,347 @@
+:root {
+    --tibia-dark: #0a0d14;
+    --tibia-panel: #121824;
+    --tibia-panel-sub: #1b2436;
+    --tibia-border: #334155;
+    --tibia-gold: #fbbf24;
+    --tibia-gold-dark: #d97706;
+    --tibia-text: #e2e8f0;
+    --tibia-text-muted: #94a3b8;
+    
+    /* Novas cores personalizadas */
+    --color-loot: #3b82f6;      /* Azul */
+    --color-supplies: #f97316;  /* Laranja */
+    --color-balance: #10b981;   /* Verde */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--tibia-dark);
+    color: var(--tibia-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    min-height: 100vh;
+}
+
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('fundo-tibia.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.22;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    width: 92%;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.header {
+    background-color: rgba(18, 24, 36, 0.9);
+    border-bottom: 2px solid var(--tibia-gold-dark);
+    padding: 24px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tibia-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.75rem;
+    color: var(--tibia-gold);
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.subtitle {
+    color: var(--tibia-text-muted);
+    font-size: 0.875rem;
+    margin-top: 2px;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(27, 36, 54, 0.8);
+    border: 1px solid var(--tibia-border);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--tibia-text-muted);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-balance);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-balance);
+}
+
+.upload-section {
+    margin-top: 24px;
+}
+
+.drop-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background-color: rgba(18, 24, 36, 0.85);
+    border: 2px dashed var(--tibia-border);
+    border-radius: 10px;
+    padding: 28px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+.drop-zone:hover {
+    border-color: var(--tibia-gold);
+    background-color: rgba(27, 36, 54, 0.9);
+}
+
+.drop-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-color: var(--tibia-panel-sub);
+    color: var(--tibia-gold);
+    border: 1px solid var(--tibia-border);
+}
+
+.drop-primary {
+    display: block;
+    font-weight: 600;
+    color: var(--tibia-text);
+}
+
+.drop-secondary {
+    display: block;
+    font-size: 0.825rem;
+    color: var(--tibia-text-muted);
+}
+
+#file-input {
+    display: none;
+}
+
+/* Cards Grid com Destaques de Cores */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.card {
+    background-color: rgba(18, 24, 36, 0.9);
+    border: 1px solid var(--tibia-border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--tibia-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 8px;
+    font-family: 'Cinzel', serif;
+}
+
+/* Utilitários de Cores Pedidas */
+.highlight-blue {
+    color: var(--color-loot) !important;
+}
+
+.highlight-orange {
+    color: var(--color-supplies) !important;
+}
+
+.highlight-green {
+    color: var(--color-balance) !important;
+}
+
+.section {
+    margin-top: 24px;
+}
+
+.card-panel {
+    background-color: rgba(18, 24, 36, 0.92);
+    border: 1px solid var(--tibia-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--tibia-border);
+    background-color: rgba(15, 20, 30, 0.8);
+}
+
+.panel-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--tibia-gold);
+}
+
+.panel-tag {
+    font-size: 0.75rem;
+    background-color: var(--tibia-panel-sub);
+    color: var(--tibia-text-muted);
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--tibia-border);
+}
+
+.panel-body {
+    padding: 20px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.tibia-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tibia-table th {
+    background-color: rgba(15, 20, 30, 0.95);
+    color: var(--tibia-gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--tibia-border);
+    position: sticky;
+    top: 0;
+}
+
+.tibia-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    color: var(--tibia-text);
+}
+
+.tibia-table tbody tr:hover {
+    background-color: rgba(27, 36, 54, 0.6);
+}
+
+.empty-msg {
+    text-align: center;
+    color: var(--tibia-text-muted);
+    padding: 32px;
+}
+
+.session-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--tibia-border);
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    background-color: var(--tibia-panel-sub);
+    color: var(--tibia-text-muted);
+    border: 1px solid var(--tibia-border);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: var(--tibia-text);
+    border-color: var(--tibia-gold);
+}
+
+.tab-btn.active {
+    background-color: var(--tibia-gold-dark);
+    color: #fff;
+    border-color: var(--tibia-gold);
+}
+
+.detail-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 16px 0 24px 0;
+    padding: 16px;
+    background-color: rgba(15, 20, 30, 0.6);
+    border-radius: 8px;
+    border: 1px solid var(--tibia-border);
+}
+
+.detail-metric-item span {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--tibia-text-muted);
+}
+
+.detail-metric-item strong {
+    font-size: 1rem;
+    color: var(--tibia-text);
+    font-family: 'Cinzel', serif;
+}
+
+.footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--tibia-text-muted);
+    font-size: 0.825rem;
+    border-top: 1px solid var(--tibia-border);
+    margin-top: 48px;
+    background-color: rgba(10, 13, 20, 0.8);
+}
